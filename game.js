@@ -17,13 +17,41 @@ const COLORS = [
 
 const PIECES = [
   null,
-  [[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]], // I
-  [[2,2],[2,2]],                               // O
-  [[0,3,0],[3,3,3],[0,0,0]],                  // T
-  [[0,4,4],[4,4,0],[0,0,0]],                  // S
-  [[5,5,0],[0,5,5],[0,0,0]],                  // Z
-  [[6,0,0],[6,6,6],[0,0,0]],                  // J
-  [[0,0,7],[7,7,7],[0,0,0]],                  // L
+  [
+    [0, 0, 0, 0],
+    [1, 1, 1, 1],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+  ], // I
+  [
+    [2, 2],
+    [2, 2],
+  ], // O
+  [
+    [0, 3, 0],
+    [3, 3, 3],
+    [0, 0, 0],
+  ], // T
+  [
+    [0, 4, 4],
+    [4, 4, 0],
+    [0, 0, 0],
+  ], // S
+  [
+    [5, 5, 0],
+    [0, 5, 5],
+    [0, 0, 0],
+  ], // Z
+  [
+    [6, 0, 0],
+    [6, 6, 6],
+    [0, 0, 0],
+  ], // J
+  [
+    [0, 0, 7],
+    [7, 7, 7],
+    [0, 0, 0],
+  ], // L
 ];
 
 const LINE_SCORES = [0, 100, 300, 500, 800];
@@ -40,7 +68,18 @@ const overlayTitle = document.getElementById('overlay-title');
 const overlayScore = document.getElementById('overlay-score');
 const restartBtn = document.getElementById('restart-btn');
 
-let board, current, next, score, lines, level, paused, gameOver, lastTime, dropAccum, dropInterval, animId;
+let board,
+  current,
+  next,
+  score,
+  lines,
+  level,
+  paused,
+  gameOver,
+  lastTime,
+  dropAccum,
+  dropInterval,
+  animId;
 
 function createBoard() {
   return Array.from({ length: ROWS }, () => new Array(COLS).fill(0));
@@ -48,8 +87,13 @@ function createBoard() {
 
 function randomPiece() {
   const type = Math.floor(Math.random() * 7) + 1;
-  const shape = PIECES[type].map(row => [...row]);
-  return { type, shape, x: Math.floor(COLS / 2) - Math.floor(shape[0].length / 2), y: 0 };
+  const shape = PIECES[type].map((row) => [...row]);
+  return {
+    type,
+    shape,
+    x: Math.floor(COLS / 2) - Math.floor(shape[0].length / 2),
+    y: 0,
+  };
 }
 
 function collide(shape, ox, oy) {
@@ -66,11 +110,11 @@ function collide(shape, ox, oy) {
 }
 
 function rotateCW(shape) {
-  const rows = shape.length, cols = shape[0].length;
+  const rows = shape.length,
+    cols = shape[0].length;
   const result = Array.from({ length: cols }, () => new Array(rows).fill(0));
   for (let r = 0; r < rows; r++)
-    for (let c = 0; c < cols; c++)
-      result[c][rows - 1 - r] = shape[r][c];
+    for (let c = 0; c < cols; c++) result[c][rows - 1 - r] = shape[r][c];
   return result;
 }
 
@@ -96,7 +140,7 @@ function merge() {
 function clearLines() {
   let cleared = 0;
   for (let r = ROWS - 1; r >= 0; r--) {
-    if (board[r].every(v => v !== 0)) {
+    if (board[r].every((v) => v !== 0)) {
       board.splice(r, 1);
       board.unshift(new Array(COLS).fill(0));
       cleared++;
@@ -191,8 +235,7 @@ function draw() {
 
   // board
   for (let r = 0; r < ROWS; r++)
-    for (let c = 0; c < COLS; c++)
-      drawBlock(ctx, c, r, board[r][c], BLOCK);
+    for (let c = 0; c < COLS; c++) drawBlock(ctx, c, r, board[r][c], BLOCK);
 
   // ghost
   const gy = ghostY();
@@ -253,6 +296,7 @@ function loop(ts) {
     }
   }
   draw();
+  if (gameOver) return;
   animId = requestAnimationFrame(loop);
 }
 
@@ -274,8 +318,11 @@ function init() {
   animId = requestAnimationFrame(loop);
 }
 
-document.addEventListener('keydown', e => {
-  if (e.code === 'KeyP') { togglePause(); return; }
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'KeyP') {
+    togglePause();
+    return;
+  }
   if (paused || gameOver) return;
   switch (e.code) {
     case 'ArrowLeft':
