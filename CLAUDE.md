@@ -19,7 +19,7 @@ Tres archivos: `index.html` (DOM + canvas), `style.css` (tema oscuro retro), `ga
 
 `game.js`:
 - **Estado global** (variables `let` compartidas): `board`, `current`, `next`, `score`, `lines`, `level`, `paused`, `gameOver`, `lastTime`, `dropAccum`, `dropInterval`, `animId`. Todo se reinicia en `init()`.
-- **Tablero**: matriz `ROWS × COLS`; `0` = vacía, `1–7` = índice de color/pieza (`COLORS`, `PIECES`).
+- **Tablero**: matriz `ROWS × COLS`; `0` = vacía, `1–8` = índice de color/pieza (`COLORS`, `PIECES`). El `8` (`NUT_TYPE`) es la tuerca: anillo 3×3 con hueco central; `randomPiece` la elige con prob. `min(0.3, 0.03 + (level-1)*0.02)`.
 - **Piezas**: `{ type, shape, x, y }`; `shape` es una matriz cuadrada. `rotateCW` = transponer + invertir filas. Siempre se copia `PIECES[type]` (nunca mutar la plantilla).
 - **Colisión**: `collide(shape, ox, oy)` es la única comprobación; usada para mover, rotar, ghost y spawn. Permite `ny < 0` (sobre el tablero) sin colisionar.
 - **Wall kicks**: `tryRotate` prueba desplazamientos `[0, -1, 1, -2, 2]`; si ninguno cabe, no rota.
